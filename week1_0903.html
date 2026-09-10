@@ -7,31 +7,274 @@
 
 <style>
     body {
-        background-color: black;
-        color: white;
+        background-color: black; /* Set the background to black */
+        color: white; /* Set the default text color to white */
     }
 
-    a,
-    a:visited {
-        color: #BF5FFF;
-        transition: color 0.2s ease, text-shadow 0.2s ease;
+    /* The purple and green palette was inspired by the Joker, 
+    though others associate it with Evangelion Unit-01. 
+    Either way, I love this color combination and the visual tension it creates.*/
+
+    a { /* Style all links */
+    color: #BF5FFF; /* Make links purple */
+    /* I want links to glow when hovered over, encouraging readers to click.
+    this part sets the smooth color and glow transitions */
+    transition: color 0.2s ease, /* Transition text color over 0.2 seconds with easing */
+    text-shadow 0.2s ease; /* Transition text shadow over 0.2 seconds with easing */
     }
+
+    /*The main difference between the above and the below is that 
+    the above sets the transition proceess of the visual effects
+    the below sets the ultimate effect of it
+    */
+
     a:hover {
-    color: white;
+    color: rgb(39, 255, 11);  /* When mouse hovering over links, turn the link text green */
     text-shadow:
-        0 0 5px #ca7dfd,
-        0 0 12px #ae44f588,
-        0 0 24px #BF5FFF;
+        0 0 24px rgb(78, 247, 55); /* Add a single light green glow */
+    }
+
+    /* h3 headings pick up the same green as the link hover state */
+    h3 {
+        color: rgb(39, 255, 11);
+    }
+
+    /* Pulled the purple .player block back out while I chase down why there's no sound —
+    easier to debug the audio itself without extra styling in the way. */
+    audio {
+        display: block;
+        width: 100%;
+        height: 32px;
+    }
+
+    /* The visualizer started life as a 300px-tall strip sitting at the top of the page,
+    but I kept wishing it was the whole mood of the page instead of a little widget on it.
+    So it's pinned to the full viewport now and pushed behind everything as a proper background. */
+    #visualizer {
+        position: fixed;   /* stays put even if the page scrolls */
+        top: 0;
+        left: 0;
+        width: 100vw;      /* the entire width of the screen */
+        height: 100vh;     /* the entire height of the screen */
+        z-index: -1;       /* sink it behind the content so it reads as a background */
+        display: block;
+        background: black;
+    }
+
+    /* The flip side of the canvas being a background: the actual page content
+    needs to be explicitly told to sit above it, or the stacking order gets ambiguous. */
+    header,
+    main,
+    footer {
+        position: relative;
+        z-index: 1;
     }
 
 </style>
 
 <body>
+    <!-- One of my favorite songs. -->
+    <audio id="music" controls>
+        <source src="Clear_ShawnRemix.mp3" type="audio/mpeg">
+    </audio>
+
+    <canvas id="visualizer"></canvas>
+
     <header>
         <h1>Creative Coding</h1>
         <h2>Week 1: Finding Inspiration</h2>
-        <p>By Skylar | September 6, 2026</p>
+        <p>By Skylar | September 6, 2026 | Refined on September 10, 2026</p>
     </header>
+
+
+  <script>
+  /* Every visualizer starts with grabbing the two elements it actually needs:
+  the <audio> tag holding my song, and the <canvas> that will become the drawing surface.
+  Nothing fancy here, just wiring references so the rest of the script has something to talk to. */
+
+  const audio = document.getElementById("music");
+
+  const canvas = document.getElementById("visualizer");
+  const ctx = canvas.getContext("2d");
+
+  /* I wanted the visualizer to feel like it belongs to the whole page, not a little box
+  stuck at the top, so the canvas is sized to the full window instead of a fixed height. */
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  /* Resizing the window shouldn't leave the lines squished or stretched,
+  so I just rerun the same sizing logic whenever the window changes. */
+  window.addEventListener("resize", function () {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  });
+
+  /* This is where the actual audio analysis begins. AudioContext is basically
+  the browser's own little sound studio, everything below plugs into it. */
+  const audioContext = new AudioContext();
+
+  /* source is the bridge that pulls the sound out of my plain <audio> tag
+  and hands it over to the Web Audio API so I can actually do something with it. */
+  const source = audioContext.createMediaElementSource(audio);
+
+  /* analyser is the piece that listens to the music and reports back
+  how loud each frequency range is, frame by frame. It's the heart of the whole effect. */
+  const analyser = audioContext.createAnalyser();
+
+  /* fftSize controls how finely the analyser slices the sound into frequency bins.
+  256 is a small, cheap size and there's a plenty of detail for three lines without taxing the browser. */
+  analyser.fftSize = 256;
+
+  /* I noticed the heavy beats in my song weren't landing visually, the lines barely moved
+  on the drops. Turns out smoothingTimeConstant defaults to 0.8, which blends each frame
+  so heavily with the last one that a sharp kick drum gets smeared into nothing. Bringing it
+  down to 0.35 lets the visualizer actually react instead of lagging behind the music. */
+  analyser.smoothingTimeConstant = 0.35;
+
+  /* Route the sound into the analyser so it can be read... */
+  source.connect(analyser);
+
+  /* ...and then straight back out to the speakers. Skip this line and the music
+  gets silently analyzed but you'll never actually hear it play. */
+  analyser.connect(audioContext.destination);
+
+  /* frequencyBinCount tells me how many frequency slots the analyser is willing to give me.
+  This array is just a bucket I'll refill every frame with the current sound data. */
+  const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+  /* time is what keeps the waves drifting forward even when the music is quiet,
+  it's the pulse of the animation, independent of whatever the audio is doing. */
+  let time = 0;
+
+  /* My first instinct was to average a chunk of frequency bins to represent a whole
+  range (bass / mid / high). Bin index isn't Hz, the real frequency depends on the
+  sample rate and fftSize, so think of these as rough buckets, not exact notes. */
+  function getFrequencyRange(startBin, endBin) {
+    let total = 0;
+
+    for (let i = startBin; i < endBin; i++) {
+      total += dataArray[i];
+    }
+
+    // Averaging keeps longer ranges from automatically reading "louder" than short ones.
+    return total / (endBin - startBin);
+  }
+
+  /* Averaging turned out to be exactly why the bass wasn't punching through: 
+  a kick drum's energy usually lives in just one or two bins, 
+  and averaging it together with a handful of quieter neighbors waters the spike down until it barely registers. 
+  So instead of asking "what's the average loudness in this range," t
+  his asks "what's the single loudest bin", 
+  which is a much more honest read of how hard a beat actually hits. */
+  function getFrequencyPeak(startBin, endBin) {
+    let peak = 0;
+
+    for (let i = startBin; i < endBin; i++) {
+      if (dataArray[i] > peak) {
+        peak = dataArray[i];
+      }
+    }
+
+    return peak;
+  }
+
+  /* This is the function that actually puts a glowing line on screen.
+  y is where the line rests when there's no sound
+  amplitude is how far the music pushes it up and down
+  frequency here just means how tightly the wave ripples across the screenit 
+  has nothing to do with audio Hz, purely a visual density knob. */
+
+  function drawLine(y, color, amplitude, frequency) {
+    ctx.beginPath();
+
+    for (let x = 0; x < canvas.width; x++) {
+      // sin() oscillates between -1 and 1; time is what keeps the wave crawling forward.
+      const waveY = y + Math.sin(x * frequency + time) * amplitude;
+
+      // The first point just starts the path, every point after that draws into the wave.
+      if (x === 0) {
+        ctx.moveTo(x, waveY);
+      } else {
+        ctx.lineTo(x, waveY);
+      }
+    }
+
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 3;
+
+    // The glow is what sells the neon look — same color as the line, just blurred outward.
+    ctx.shadowBlur = 20;
+    ctx.shadowColor = color;
+    ctx.stroke();
+  }
+
+  /* This runs every single frame: read the music, then redraw all three lines
+  from scratch. It's the loop that actually brings the whole thing to life. */
+  function animate() {
+    // Wipe the previous frame first, or the lines would smear into a solid mess.
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // One read per frame — all three lines share this same snapshot of the music.
+    analyser.getByteFrequencyData(dataArray);
+
+    /* These are rough, purely visual low / mid / high groupings, not a real EQ split.
+    I'm not isolating specific instruments, just carving the spectrum into three feels.
+    Bass switched to getFrequencyPeak so the drum hits actually register; 
+    mid and high stay on the average because they read better smooth than spiky. */
+    const bass = getFrequencyPeak(0, 8);
+    const mid = getFrequencyRange(8, 30);
+    const high = getFrequencyRange(30, 70);
+
+    /* These multipliers are basically how loud each line looks for the same music.
+    I pushed bass hardest since that's where the drums I care about live
+    a real drop should send that line flying, not just nudge it. */
+    const bassAmplitude = bass * 1.1;  // bass: the one I want jumping the highest
+    const midAmplitude = mid * 0.45;   // mid: noticeable, but not the main event
+    const highAmplitude = high * 0.25; // high: a subtle shimmer, not a distraction
+
+    /* I originally spread the three lines out (30% / 50% / 70% of the screen),
+    but I liked the idea of them living close together and crashing into each other
+    when the music gets loud more than three lines that politely stay in their lane,
+    so the resting positions got pulled in to 40% / 50% / 60%. */
+
+    // Cyan: high frequencies: the tightest ripple, and the smallest swing.
+    drawLine(canvas.height * 0.4, "#00ffff", highAmplitude, 0.06);
+
+    // Green: bass: the widest, laziest ripple, but the one with the most room to swing.
+    drawLine(canvas.height * 0.5, "#39ff14", bassAmplitude, 0.015);
+
+    // Magenta: mid frequencies: sits right in between the other two, in every sense.
+    drawLine(canvas.height * 0.6, "#ff00ff", midAmplitude, 0.03);
+
+    // This is what keeps the waves drifting even when the music goes quiet.
+    time += 0.05;
+
+    // Ask the browser to call this same function again for the next frame.
+    requestAnimationFrame(animate);
+  }
+
+  /* Browsers won't let a page start an AudioContext on its own,
+  it has to be a direct response to the user doing something, like pressing play.
+  So instead of starting it on page load, I wait for that first play and resume it right then.
+  Logging the result here because "resume never actually finished" is the classic reason
+  a page like this LOOKS like it's playing (progress bar moving) but stays silent
+  once <audio> is routed through createMediaElementSource, its own sound is muted and
+  everything you hear has to come back out through this AudioContext instead. */
+  audio.addEventListener("play", function () {
+
+    if (audioContext.state === "suspended") {
+      audioContext.resume().then(function () {
+        console.log("AudioContext resumed, state:", audioContext.state);
+      }).catch(function (err) {
+        console.error("AudioContext failed to resume:", err);
+      });
+    }
+
+  });
+
+  animate(); // Start the animation loop right away.
+
+</script>
 
     <main>
         <section>
@@ -63,7 +306,7 @@
         <iframe
              src="https://player.vimeo.com/video/1011310512"
              title="1D985 by Raven Kwok"
-             style="display: block; width: 100%; aspect-ratio: 16 / 9; border: 0;"
+             style="display: block; width: 100%; max-width: 600px; aspect-ratio: 16 / 9; border: 0; margin: 0;"
              allow="fullscreen; picture-in-picture"
              allowfullscreen>
         </iframe>
@@ -110,15 +353,46 @@
                 approaching an unfamiliar space whose structure can be sensed 
                 before it can be fully understood.
             </p>
-        
+
+        <h3>3. Skylar's Recreation</h2>
+            <p>
+                Click the play button on the top of this page to see the visual effect.
             </p>
+            <p>
+                I'm always a huge fan of Hyperpop and Brazilian Funk, 
+                I guess it's because of their punchy beats and carefully crafted sonic details 
+                that makes me feel alive, and I found them really suitable for visualization. 
+                Inspired by Raven Kwok's work, 
+                I started small, with an audio player and three neon lines on a black background. 
+                Then I used a sine wave to make the lines move. 
+                Then I connect them to audio frequency data, 
+                and I intentionally keep a small space between each other so they can create an overlapping visual effects
+    
+            </p>
+            <p>
+                At first, all three lines responded to the same low-frequency data. 
+                I then split the data into three rough frequency bands so each line could react differently,
+                broad, larger movements for the lows, medium waves for the mids, and smaller, denser waves for the highs. 
+                The result is a visual interpretation of the music, with different parts of the sound shaping the movement.
+            </p>
+            
+        </section>
+            </p>
+
+
         </section>
     </main>
+
+
+
+
 
     <footer>
         <p>
             <a href="index.html"> > Back to Skylar's Portfolio</a>
         </p>
     </footer>
+
+
 </body>
 </html>
