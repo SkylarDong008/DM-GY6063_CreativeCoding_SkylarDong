@@ -1,19 +1,297 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <title>Skylar's Index</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Skylar Dong | Creative Coding</title>
+
+  <style>
+
+    body {
+      margin: 0;
+      padding: 60px;
+      background: #0b0b0b;
+      color: white;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    header {
+      margin-bottom: 80px;
+    }
+
+    h1 {
+      font-size: 64px;
+      margin: 0;
+    }
+
+    header p {
+      color: #999;
+      margin-top: 12px;
+      font-size: 18px;
+    }
+
+    section {
+      margin-bottom: 80px;
+    }
+
+    h2 {
+      font-size: 28px;
+      margin-bottom: 30px;
+      border-bottom: 1px solid #333;
+      padding-bottom: 12px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns:
+        repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+    }
+
+
+    .card {
+      border: 1px solid #e120ff;
+      padding: 24px;
+      text-decoration: none;
+      color: white;
+      transition: 0.25s;
+    }
+
+    .card:hover {
+      border-color: #ffffff;
+      transform: translateY(-4px);
+    }
+
+    .week {
+      font-size: 13px;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+
+    .card h3 {
+      margin: 12px 0 10px 0;
+      font-size: 22px;
+    }
+
+
+    .card p {
+      color: #aaa;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+
+    .assignment-card:hover {
+      background: #85fc0d;
+    }
+    .practice-card:hover {
+      background: #85fc0d;
+    }
+
+    footer {
+      margin-top: 100px;
+      border-top: 1px solid #333;
+      padding-top: 30px;
+      color: #e120ff;
+      font-size: 14px;
+    }
+
+
+    @media (max-width: 600px) {
+
+      body {
+        padding: 30px 20px;
+      }
+      h1 {
+        font-size: 42px;
+      }
+
+    }
+  </style>
+
 </head>
+
+
 <body>
+  <header>
     <h1>CREATIVE CODING</h1>
-    <h2>SKYLAR'S INDEX</h2>
-    <h3>Hey Skylar, please keep your index well-organised, througout the term, okay？</h3>
+    <p>
+      SKYLAR DONG | NYU IDM | FALL 2026
+    </p>
+  </header>
 
-    <p>Current Time: THU Sep 3 16:06 </p>
-    <p>...</p>
+  <section>
 
-    <a href="week1_0903.html">week1_0903</a>
-    <a href="week2_0910.html">week2_0910</a>
+    <h2>ASSIGNMENTS</h2>
+
+    <div class="grid">
+
+      <a
+        class="card assignment-card"
+        href="Week01_0903/week1_0903.html"
+      >
+
+        <div class="week">
+          Week 01
+        </div>
+
+        <h3>
+          Finding Inspiration
+        </h3>
+
+        <p>
+          First webpage experiment exploring creative coding,
+          sound, visual references and digital art.
+        </p>
+
+      </a>
+
+      <a
+        class="card assignment-card"
+        href="Week02_0910/week2_0910_assignment.html"
+      >
+
+        <div class="week">
+          Week 02
+        </div>
+
+        <h3>
+          Experiment with Vinyl Record
+        </h3>
+
+        <p>
+          Build on WEEK01's work.
+          Experiment bouncing points and generative traces
+          through a vinyl record interface.
+        </p>
+
+      </a>
+
+      <div class="card">
+
+        <div class="week">
+          Week 03
+        </div>
+
+        <h3>
+          Coming Soon
+        </h3>
+
+        <p>
+          Coming Soon
+        </p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <section>
+
+    <h2>IN-CLASS PRACTICE</h2>
+
+
+    <div class="grid">
+
+      <a
+        class="card practice-card"
+        href="Week01_0903/Week01_InClass/drawing_0903.html"
+      >
+
+        <div class="week">
+          Week 01
+        </div>
+
+        <h3>
+          VScode + Github + p5.js Setup
+        </h3>
+
+        <p>
+          Development environment,
+          HTML structure and introduction to p5.js.
+        </p>
+
+      </a>
+
+      <a
+        class="card practice-card"
+        href="Week02_0910/Week02_InClass/week2_0910_practice.html"
+      >
+
+        <div class="week">
+          Week 02
+        </div>
+
+        <h3>
+          Variables, Color & Bounce
+        </h3>
+
+        <p>
+          Coordinates, drawing primitives,
+          variables, randomness, map(),
+          if statements and movement.
+        </p>
+
+      </a>
+
+
+    </div>
+
+  </section>
+
+  <section>
+
+    <h2>COURSE INFO</h2>
+
+    <p style="
+      max-width: 700px;
+      color: #aaa;
+      line-height: 1.7;
+    ">
+
+      This website documents my weekly experiments,
+      assignments and in-class exercises for
+      DM-GY 6063 Creative Coding at NYU IDM.
+
+      Each week builds on the previous one,
+      exploring how code can become a medium
+      for interaction, visual systems and creative expression.
+
+    </p>
+
+  </section>
+
+ <section>
+
+    <h2>ABOUT THIS WEBSITE</h2>
+
+    <p style="
+      max-width: 700px;
+      color: #aaa;
+      line-height: 1.7;
+    ">
+
+      This website documents Skylar's weekly experiments,
+      assignments and in-class exercises for
+      DM-GY 6063 Creative Coding at NYU IDM, Fall 2026.
+
+    </p>
+
+  </section>
+
+  <footer>
+
+    SKYLARDONG_NYUIDM_FALL2026 © ALL RIGHTS RESERVED
+
+  </footer>
 
 
 </body>
+
 </html>

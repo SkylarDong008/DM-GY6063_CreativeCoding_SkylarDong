@@ -1,6 +1,6 @@
 let x, y;
 let diameter = 200;
-let yV = random(0,10), xV = 3;
+let yV = 5, xV = 3;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -14,11 +14,15 @@ function setup() {
 function draw() {
   //background(100);
 
+  // x = random(width)
+  // y = random(height)
+
   let r = map(y, diameter/2, height - diameter/2, 0, 255)
   let g = map(x, diameter/2, width - diameter/2, 255, 0)
   let b = map(x, diameter/2, width - diameter/2, 0, 255)
 
   //map(value, 旧min, 旧max, 新min, 新max)
+
 
 
   fill(r + random(-20, 5),g + random(-10, 10),b) // 
