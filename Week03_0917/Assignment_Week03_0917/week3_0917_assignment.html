@@ -79,37 +79,16 @@
 
   <div class="project-notes">
 
-    <h1>WEEK02</h1>
-    <h1>EXPERIMENT WITH VINYL RECORD</h1>
+    <h1>WEEK03</h1>
+    <h1>VINYL RECORD PLAYER_CHARLI XCX</h1>
+    <p>
+      This week’s project is an iteration on my Week 02 vinyl record experiment. In the previous version, I focused mainly on building the visual structure of the vinyl, dividing it into different movement zones, and experimenting with moving points and recorded trails. For Week 03, I wanted to push the project further by connecting those visual movements to actual audio data from Next Level Charli.
+The main question became: how can I make the vinyl respond to specific changes in the music instead of simply moving in a pre-programmed way? I started working with p5.FFT() to analyze the song and understand the frequency spectrum. At first, I tried using broad categories such as bass, mid, and treble, but I realized that this did not really match the layered rhythm structure I was hearing in the song.
+After discussing the project with Prof. Ofer, I created a separate test.js file and temporarily stepped away from the final visualization. I manually monitored frequency spikes in the console, compared different sections of the song, and experimented with identifying repeated frequency ranges. This process helped me understand the relationship between the current spectrum, the previous spectrum, sudden frequency changes, thresholds, and visual mapping.
+I then brought those observations back into the main sketch. Three rotating points now respond to different experimental frequency ranges and generate fluorescent trails in separate radial zones. I also added smoothing, constrained movement, and a small outward shift after each full rotation so the trails do not completely overlap.
+The frequency ranges are still experimental, but the biggest progress this week was understanding how audio analysis, movement, and visual output connect as one system.
+    </p>
 
-    <h2>WHAT I'VE DONE SO FAR</h2>
-
-    <h3>STEP 1. Draw a still vinyl record in canvas</h3>
-    <p>Details: windowResized()</p>
-
-    <h3>STEP 2. Create a point that can bounce back between the edge of hole
-      and the edge of vinyl record</h3>
-    <p>Details: dist(), reverse velocity, if + calculation</p>
-
-    <h3>STEP 3. Insert image that fits the vinyl record's size</h3>
-    <p>Details: preload(), loadImage(), imageMode(CENTER), image()</p>
-
-    <h2>WHAT I'M WORKING ON NEXT</h2>
-
-    <h3>STEP 4. Divide the vinyl into three bounce zones</h3>
-    <p>Details:</p>
-
-    <h3>STEP 5. Create three moving points</h3>
-    <p>Details:</p>
-
-    <h3>STEP 6. Record their movement trails</h3>
-    <p>Details:</p>
-
-    <h3>STEP 7. Add audio</h3>
-    <p>Details:</p>
-
-    <h3>STEP 8. Connect the sound data to the three points</h3>
-    <p>Details:</p>
 
   </div>
 
