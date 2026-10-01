@@ -58,4 +58,7 @@ function draw(){
     endRecordSvg();
     bDoExportSvg = false;
   }
+
+
+  
 }
