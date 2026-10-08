@@ -1,3 +1,5 @@
+let img01;
+let img02;
 let img;
 
 let girlRightEdge = [];
@@ -11,11 +13,12 @@ let girlSearchLimit;
 let boySearchLimit;
 
 function preload() {
-  img = loadImage("RestEnergy_silhouette.png");
+  img01 = loadImage("RestEnergy_silhouette.png");
+  img02 = loadImage("RestEnergy_Phase01.png");
 }
 
 function setup() {
-  // createCanvas(img.width, img.height);
+  img = img01;
   createCanvas(img.width, img.height, SVG);
 
   img.loadPixels();
@@ -70,7 +73,7 @@ function setup() {
 function draw() {
   background(255);
 
-  image(img, 0, 0);
+  image(img02, 0, 0, width, height);
 
   stroke(0);
   strokeWeight(1);
