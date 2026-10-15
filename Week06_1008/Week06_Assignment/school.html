@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>life.exe — School</title>
+  <script src="https://cdn.jsdelivr.net/npm/p5@2.3.2/lib/p5.js"></script>
+  <style>
+  
+    html, body { margin: 0; padding: 0; overflow: hidden; background: #140f24; color: white; font-family: monospace; }
+    canvas { display: block; position: fixed; inset: 0; z-index: 0; }
+    nav { position: fixed; top: 16px; left: 20px; z-index: 20; background: #151520d9; padding: 10px 14px; border-radius: 6px; }
+    nav a { color: #c8b5ff; }
+    nav span { margin-right: 18px; }
+    .portal-active .scene-ui { visibility: hidden; pointer-events: none; }
+    .portal-active canvas { z-index: 100; }
+    #asset-status { position: fixed; bottom: 8px; left: 12px; right: 12px; z-index: 30; background: #532129; padding: 10px; }
+  </style>
+</head>
+
+<body>
+  <nav class="scene-ui"><span>School</span><a href="randomness.html" data-portal>Go Randomness</a></nav>
+  <p id="asset-status" class="scene-ui" role="status" hidden></p>
+  <script src="timetravel_visual.js"></script>
+  <script src="school.js"></script>
+</body>
+
+</html>
