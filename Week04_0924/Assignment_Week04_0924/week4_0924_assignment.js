@@ -14,12 +14,20 @@ let boySearchLimit;
 
 function preload() {
   img01 = loadImage("RestEnergy_silhouette.png");
-  img02 = loadImage("RestEnergy_Phase01.png");
+  // img02 = loadImage("RestEnergy_Phase01.png");
 }
 
 function setup() {
+  console.log("SETUP STARTED");
+
   img = img01;
+
+  console.log("Image 01:", img01.width, img01.height);
+  // console.log("Image 02:", img02.width, img02.height);
+
   createCanvas(img.width, img.height, SVG);
+
+  console.log("CANVAS CREATED");
 
   img.loadPixels();
 
@@ -29,12 +37,9 @@ function setup() {
   findGirlRightEdge();
   findBoyLeftEdge();
 
+  console.log("SETUP FINISHED");
+
   noLoop();
-// calculation: count down the num of girl & boy
-// boyLeftEdge.length == girlRightEdge.length
-// 
-  console.log("Girl line count:", girlRightEdge.length);
-  console.log("Boy line count:", boyLeftEdge.length);
 }
 
 // function draw() {
@@ -73,7 +78,7 @@ function setup() {
 function draw() {
   background(255);
 
-  image(img02, 0, 0, width, height);
+  image(img01, 0, 0, width, height);
 
   stroke(0);
   strokeWeight(1);

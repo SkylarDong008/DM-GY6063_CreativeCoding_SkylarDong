@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Digital Momentum (projection)</title>
+
+  <!-- run with Live Server, images won't load if you just open the file. press H for controls -->
+
+  <style>
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: black;
+      color: white;
+      font: 14px/1.7 monospace;
+    }
+
+    canvas {
+      display: block;
+      cursor: none; /* hide mouse on the projector */
+    }
+
+    #loading {
+      position: fixed;
+      top: 45%;
+      width: 100%;
+      text-align: center;
+    }
+
+    #help {
+      position: fixed;
+      left: 24px;
+      bottom: 24px;
+      padding: 16px 22px;
+      background: rgba(17, 17, 17, 0.9);
+      border: 1px solid #555;
+    }
+
+    #help[hidden] {
+      display: none;
+    }
+
+    .key {
+      display: inline-block;
+      width: 4em;
+      color: #acd8cb;
+    }
+
+    #state {
+      margin-top: 8px;
+      color: #acd8cb;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="loading">Loading...</div>
+
+  <div id="help" hidden>
+    <b>CONTROLS</b><br>
+    <span class="key">← →</span> pick a ball<br>
+    <span class="key">↑ ↓</span> change image<br>
+    <span class="key">1 2</span> release one / two balls<br>
+    <span class="key">space</span> pause<br>
+    <span class="key">R</span> release again<br>
+    <span class="key">F</span> fullscreen<br>
+    <span class="key">L</span> strings on / off<br>
+    <span class="key">G</span> selection glow on / off<br>
+    <span class="key">H</span> hide this
+    <div id="state"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.11.11/lib/p5.min.js"></script>
+  <script src="projection.js"></script>
+</body>
+</html>

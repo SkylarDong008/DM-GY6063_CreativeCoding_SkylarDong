@@ -1,8 +1,5 @@
 let particles = [];
-// This is my own switch, not a built-in feature.
-// The drawing function checks it to decide whether to show time travel.
 let timetravelActive = false; 
-
 
 // I create the particles once in setup, rather than creating new ones every frame.
 function initPortal() {

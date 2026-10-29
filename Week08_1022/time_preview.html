@@ -1,0 +1,121 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Time Perception — Interface Vortex</title>
+<style>
+  body {
+    margin: 0;
+    background: #09090d;
+    color: white;
+    font-family: Arial, sans-serif;
+  }
+  main { max-width: 1100px; margin: 30px auto; padding: 20px; }
+  canvas { width: 100%; height: 65vh; display: block; }
+  input { width: 100%; accent-color: #8b5cf6; }
+  .labels { display: flex; justify-content: space-between; }
+  p { color: #aaa; }
+</style>
+</head>
+<body>
+<main>
+  <h1>TIME PERCEPTION</h1>
+  <p>Digital Archaeology → Temporal Collapse</p>
+  <canvas id="visual"></canvas>
+  <h3>Temporal Distortion: <span id="value">0%</span></h3>
+  <input id="morph" type="range" min="0" max="100" value="0">
+  <div class="labels">
+    <span>Linear Corridor</span><span>Temporal Vortex</span>
+  </div>
+</main>
+<script>
+const canvas = document.getElementById("visual");
+const ctx = canvas.getContext("2d");
+const slider = document.getElementById("morph");
+const label = document.getElementById("value");
+
+function draw() {
+  const dpr = window.devicePixelRatio || 1;
+  const w = canvas.clientWidth;
+  const h = canvas.clientHeight;
+  canvas.width = w * dpr;
+  canvas.height = h * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  ctx.fillStyle = "#09090d";
+  ctx.fillRect(0, 0, w, h);
+
+  const m = Number(slider.value) / 100;
+  const cx = w / 2, cy = h / 2;
+
+  for (let layer = 15; layer >= 0; layer--) {
+    const depth = (layer + 1) / 16;
+    const scale = Math.pow(depth, 1.8);
+
+    for (let side = 0; side < 4; side++) {
+      for (let j = 0; j < 7; j++) {
+        const theta = side * Math.PI / 2
+                    + (j + 0.5) * Math.PI / 14;
+        const angle = theta + scale * m * Math.PI * 3.3;
+        const r = (1 - scale) * Math.min(w, h) * 0.7 + 8;
+
+        const divisor = Math.max(
+          Math.abs(Math.cos(theta)),
+          Math.abs(Math.sin(theta))
+        );
+
+        const sx = cx + Math.cos(theta) / divisor * r;
+        const sy = cy + Math.sin(theta) / divisor * r;
+
+        const spiralR = (1 - scale) * Math.min(w, h) * 0.6 + 5;
+        const vx = cx + Math.cos(angle) * spiralR;
+        const vy = cy + Math.sin(angle) * spiralR;
+
+        const x = sx * (1 - m) + vx * m;
+        const y = sy * (1 - m) + vy * m;
+        const size = Math.max(2, 13 * (1 - scale));
+
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(m * angle);
+
+        // Window body
+        ctx.fillStyle = ["#dedfe9", "#c6c7d3", "#cbd1f8"][layer % 3];
+        ctx.fillRect(-size * 1.15, -size * .7,
+                     size * 2.3, size * 1.4);
+
+        // Window title bar
+        ctx.fillStyle = layer % 3 === 0 ? "#293bd9" : "#686d85";
+        ctx.fillRect(-size * 1.15, -size * .7,
+                     size * 2.3, size * .24);
+
+        // Fake GUI content
+        ctx.fillStyle = "#686d85";
+        for (let k = 0; k < 3; k++) {
+          ctx.fillRect(-size * .85,
+                       -size * .25 + k * size * .3,
+                       size * (.5 + (k % 2) * .5),
+                       Math.max(.6, size * .07));
+        }
+        ctx.restore();
+      }
+    }
+  }
+
+  ctx.fillStyle = "#000";
+  ctx.beginPath();
+  ctx.arc(cx, cy, 3, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+slider.addEventListener("input", () => {
+  label.textContent = slider.value + "%";
+  draw();
+});
+window.addEventListener("resize", draw);
+draw();
+</script>
+</body>
+</html>

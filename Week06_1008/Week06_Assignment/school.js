@@ -28,9 +28,10 @@ function draw() {
 function createEditor() {
 
   editor = createDiv();
+
   editor.addClass("scene-ui");
-  editor.style("z-index", "10");
-  editor.position(windowWidth * 0.15, windowHeight * 0.12);
+  editor.style("z-index", "10"); // layer
+  editor.position(windowWidth * 0.15, windowHeight * 0.12); // box position
   editor.size(windowWidth * 0.7, windowHeight * 0.7);
 
   editor.style("background", "rgba(13, 14, 21, 0.4)");
@@ -97,7 +98,7 @@ function createEditor() {
 
   commandInput = createInput("");
   commandInput.parent(terminal);
-  commandInput.attribute("aria-label", "Input go randomness, then press Enter");
+  commandInput.attribute("hint", "Input go randomness, then press Enter");
   commandInput.attribute("placeholder", "skylar@reality ~ % go randomness");
   commandInput.style("background", "transparent");
   commandInput.style("border", "none");
@@ -125,6 +126,9 @@ function createEditor() {
 function checkInput() {
   if (timetravelActive) return;
 
+  // I read the input, trim() remove extra spaces at both ends, 
+  // toLowerCase() convert it to lowercase
+  // so extra spaces around the command or capital letters won't affect the check
   let command = commandInput.value().trim().toLowerCase();
 
   if (command === "go randomness") {
